@@ -5,8 +5,12 @@ import Movie from "./movie";
 import Search from "./search";
 
 
-const MOVIE_API_URL = "https://www.omdbapi.com/?s=woman&apikey=efa873c9"; // you should replace this with yours
-
+const MOVIE_API_URL = "https://cors-anywhere.herokuapp.com/https://www.doesthedogdie.com/search?q=woman"; // you should replace this with yours
+const HEADERS = new Headers({
+  "Accept": "application/json",
+  "Content-Type": "application/json",
+  "X-API-KEY": "30789b54f5732cbcaa666f9bbe2ebbad"
+});
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -14,10 +18,11 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
-    fetch(MOVIE_API_URL)
+    fetch(MOVIE_API_URL, {headers: HEADERS, method: "GET"})
       .then(response => response.json())
       .then(jsonResponse => {
-        setMovies(jsonResponse.Search);
+        console.log(jsonResponse);
+        setMovies(jsonResponse.items);
         setLoading(false);
       });
   }, []);
@@ -26,11 +31,11 @@ const App = () => {
     setLoading(true);
     setErrorMessage(null);
 
-    fetch(`https://www.omdbapi.com/?s=${searchValue}&apikey=efa873c9`)
+    fetch(`https://cors-anywhere.herokuapp.com/https://www.doesthedogdie.com/search?q=${searchValue}`, {headers: HEADERS, method: "GET"})
       .then(response => response.json())
       .then(jsonResponse => {
         if (jsonResponse.Response === "True") {
-          setMovies(jsonResponse.Search);
+          setMovies(jsonResponse.items);
           setLoading(false);
         } else {
           setErrorMessage(jsonResponse.Error);
